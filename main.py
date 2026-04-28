@@ -11,6 +11,10 @@ def main():
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")      
+    # set up font and create variables
+    font = pygame.font.Font(None, 36)
+    score = 0
+    lives = 3
     # create sprite groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -38,20 +42,36 @@ def main():
         updatable.update(dt)
         for asteroid in asteroids:
             if asteroid.collides_with(player):
+                lives -= 1
                 log_event("player_hit")
-                print("Game over!")
-                sys.exit()
+                if lives <= 0:
+                    print(f"Game over! Final Score: {score}")
+                    sys.exit()
+                else:
+                    # Player survived, but lost a life. Reset player to the center of the screen
+                    player.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+                    
+                    # so the player doesn't instantly die upon respawning
+                    for a in asteroids:
+                        a.kill()
+                    break
         for asteroid in asteroids:
             for shot in shots:
                 if asteroid.collides_with(shot):
                     log_event("asteroid_shot")
                     asteroid.split()
                     shot.kill()
+                    score += 10
 
         screen.fill("black")
         player.draw(screen)
         for obj in drawable:
             obj.draw(screen)
+        # draw UI on top of everything else
+        score_text = font.render(f"Score: {score}", True, "white")
+        lives_text = font.render(f"Lives: {lives}", True, "white")
+        screen.blit(score_text, (10, 10))
+
         pygame.display.flip()
         clock.tick(60)
         dt = clock.tick(60) / 1000
