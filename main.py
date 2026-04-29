@@ -71,7 +71,7 @@ def main():
         score_text = font.render(f"Score: {score}", True, "white")
         lives_text = font.render(f"Lives: {lives}", True, "white")
         screen.blit(score_text, (10, 10))
-
+        screen.blit(lives_text, (10, 45))
         pygame.display.flip()
         clock.tick(60)
         dt = clock.tick(60) / 1000
