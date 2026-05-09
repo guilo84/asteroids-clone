@@ -4,6 +4,7 @@ from logger import log_state, log_event
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
+from particle import Particle
 from shot import Shot
 
 def main():
